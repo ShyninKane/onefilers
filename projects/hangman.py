@@ -5,7 +5,7 @@ from pathlib import Path
 # TODO: rename functions and vars
 
 cwd = Path(__file__).parent.absolute()
-WORDLIST_PATH = f'{cwd}/words.txt'
+WORDLIST_PATH = f'{cwd}/../words.txt'
 
 def loadWords() -> list[str]:
     """
