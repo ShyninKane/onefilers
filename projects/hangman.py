@@ -3,7 +3,7 @@ import string
 from pathlib import Path
 
 cwd = Path(__file__).parent.absolute()
-wordlist_path = f'{cwd}/../words.txt'
+wordlist_path = f'{cwd}/../data/words.txt'
 
 def load_words() -> list[str]:
     """
