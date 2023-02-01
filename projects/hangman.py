@@ -2,12 +2,10 @@ import random
 import string
 from pathlib import Path
 
-# TODO: rename functions and vars
-
 cwd = Path(__file__).parent.absolute()
-WORDLIST_PATH = f'{cwd}/../words.txt'
+wordlist_path = f'{cwd}/../words.txt'
 
-def loadWords() -> list[str]:
+def load_words() -> list[str]:
     """
     Returns a list of valid words. Words are strings of lowercase letters.
 
@@ -15,13 +13,13 @@ def loadWords() -> list[str]:
     take a while to finish.
     """
     print("Loading word list from file...")
-    with open(WORDLIST_PATH, 'r') as file:
+    with open(wordlist_path, 'r') as file:
         line: str = file.readline()
         wordlist: list[str] = line.split()
     print(f'  {len(wordlist)} words loaded.') 
     return wordlist
 
-def chooseWord(wordlist: list[str]) -> str:
+def choose_word(wordlist: list[str]) -> str:
     """
     wordlist (list): list of words (strings)
 
@@ -29,57 +27,57 @@ def chooseWord(wordlist: list[str]) -> str:
     """
     return random.choice(wordlist)
 
-wordlist = loadWords()
+wordlist = load_words()
 
-def isWordGuessed(secretWord: str, lettersGuessed: list[str]) -> bool:
+def is_word_guessed(secret_word: str, letters_guessed: list[str]) -> bool:
     '''
-    secretWord: string, the word the user is guessing
-    lettersGuessed: list, what letters have been guessed so far
-    returns: boolean, True if all the letters of secretWord are in lettersGuessed;
+    secret_word: string, the word the user is guessing
+    letters_guessed: list, what letters have been guessed so far
+    returns: boolean, True if all the letters of secret_word are in letters_guessed;
       False otherwise
     '''
-    isGuessed: bool = True
-    for letter in secretWord:
-        if letter not in lettersGuessed:
-            isGuessed = False
-    return isGuessed
+    is_guessed: bool = True
+    for letter in secret_word:
+        if letter not in letters_guessed:
+            is_guessed = False
+    return is_guessed
 
-def getGuessedWord(secretWord: str, lettersGuessed: list[str]) -> str:
+def getGuessedWord(secret_word: str, letters_guessed: list[str]) -> str:
     '''
-    secretWord: string, the word the user is guessing
-    lettersGuessed: list, what letters have been guessed so far
+    secret_word: string, the word the user is guessing
+    letters_guessed: list, what letters have been guessed so far
     returns: string, comprised of letters and underscores that represents
-      what letters in secretWord have been guessed so far.
+      what letters in secret_word have been guessed so far.
     '''
     word: str = ''
-    for letter in secretWord:
-        if letter in lettersGuessed:
+    for letter in secret_word:
+        if letter in letters_guessed:
             word += letter
         else:
             word += '_ '
     return word
 
-def getAvailableLetters(lettersGuessed: list[str]) -> str:
+def getAvailableLetters(letters_guessed: list[str]) -> str:
     '''
-    lettersGuessed: list, what letters have been guessed so far
+    letters_guessed: list, what letters have been guessed so far
     returns: string, comprised of letters that represents what letters have not
       yet been guessed.
     '''
     avalable_letters: str = ''
     alphabet = string.ascii_lowercase
     for letter in alphabet:
-        if letter not in lettersGuessed:
+        if letter not in letters_guessed:
             avalable_letters += letter
     return avalable_letters
 
-def hangman(secretWord: str) -> None:
+def hangman(secret_word: str) -> None:
     '''
-    secretWord: string, the secret word to guess.
+    secret_word: string, the secret word to guess.
 
     Starts up an interactive game of Hangman.
 
     * At the start of the game, let the user know how many
-      letters the secretWord contains.
+      letters the secret_word contains.
 
     * Ask the user to supply one guess (i.e. letter) per round.
 
@@ -92,29 +90,29 @@ def hangman(secretWord: str) -> None:
 
     Follows the other limitations detailed in the problem write-up.
     '''
-    word_len = len(secretWord)
+    word_len = len(secret_word)
     print(f'Welcome to the game, Hangman!\nI am thinking of a word that is {word_len} letters long.')
 
     guesses_left: int = 8
-    lettersGuessed: list[str] = []
+    letters_guessed: list[str] = []
     alphabet = string.ascii_lowercase
 
-    while not isWordGuessed(secretWord, lettersGuessed) and guesses_left > 0:
+    while not is_word_guessed(secret_word, letters_guessed) and guesses_left > 0:
         print('-------------')
         print(f'You have {guesses_left} guesses left.')
-        print('Available letters:', getAvailableLetters(lettersGuessed))
+        print('Available letters:', getAvailableLetters(letters_guessed))
 
         guessed_letter = input('Please guess a letter: ').lower()
-        blanks = getGuessedWord(secretWord, lettersGuessed)
+        blanks = getGuessedWord(secret_word, letters_guessed)
 
         if len(guessed_letter) > 1:
             print('Sorry, you can guess only 1 letter at a time.')
-        elif guessed_letter in lettersGuessed:
+        elif guessed_letter in letters_guessed:
             print('Oops! You\'ve already guessed that letter:', blanks)
-        elif (guessed_letter in alphabet) and (guessed_letter not in lettersGuessed):
-            lettersGuessed.append(guessed_letter)
-            blanks = getGuessedWord(secretWord, lettersGuessed)
-            if guessed_letter in secretWord:
+        elif (guessed_letter in alphabet) and (guessed_letter not in letters_guessed):
+            letters_guessed.append(guessed_letter)
+            blanks = getGuessedWord(secret_word, letters_guessed)
+            if guessed_letter in secret_word:
                 print('Good guess:', blanks)
             else:
                 print('Oops! That letter is not in my word:', blanks)
@@ -123,11 +121,11 @@ def hangman(secretWord: str) -> None:
             print('Sorry, I didn\'t understand that. Recheck your input and try again.')
 
     print('-------------')
-    if isWordGuessed(secretWord, lettersGuessed):
+    if is_word_guessed(secret_word, letters_guessed):
         print('Congratulations, you won!')
     else:
-        print(f'Sorry, you ran out of guesses. The word was {secretWord}.')
+        print(f'Sorry, you ran out of guesses. The word was {secret_word}.')
 
 
-secretWord = chooseWord(wordlist).lower()
-hangman(secretWord)
+secret_word = choose_word(wordlist).lower()
+hangman(secret_word)
